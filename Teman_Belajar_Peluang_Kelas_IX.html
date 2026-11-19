@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TEMAN BELAJAR PELUANG — Matematika Kelas IX</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .math-frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 3px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .math-frac .num {
+      border-bottom: 2px solid currentColor;
+      padding: 0 4px 2px;
+      font-size: 0.9em;
+    }
+    .math-frac .den {
+      padding: 2px 4px 0;
+      font-size: 0.9em;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      70% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes sadShake {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      20% { transform: translateX(-8px) rotate(-6deg); }
+      40% { transform: translateX(8px) rotate(6deg); }
+      60% { transform: translateX(-6px) rotate(-4deg); }
+      80% { transform: translateX(6px) rotate(4deg); }
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-pop {
+      animation: popIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .animate-sad {
+      animation: sadShake 0.6s ease-in-out;
+    }
+    .animate-float {
+      animation: floatSlow 3s ease-in-out infinite;
+    }
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .buzzer-btn {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .buzzer-btn:active:not(:disabled) {
+      transform: translateY(3px) scale(0.97);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Header / Navbar -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-500 text-white flex items-center justify-center shadow-sm text-xl">
+          🎲
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 leading-tight">
+            TEMAN BELAJAR PELUANG
+          </h1>
+          <p class="text-xs text-slate-500 font-medium">Matematika Kelas IX • Kurikulum Merdeka</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <nav class="flex bg-slate-100 p-1 rounded-xl" aria-label="Navigasi Utama">
+          <button id="nav-materi" type="button"
+            class="px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition bg-white text-indigo-700 shadow-sm">
+            📖 Materi
+          </button>
+          <button id="nav-latihan" type="button"
+            class="px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900">
+            🎯 Latihan Soal
+          </button>
+        </nav>
+
+        <button id="sound-toggle" type="button" title="Aktifkan/Matikan Suara"
+          class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-medium text-slate-700 flex items-center gap-1.5 transition">
+          <span id="sound-icon">🔊</span>
+          <span class="hidden sm:inline" id="sound-label">Suara On</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+
+    <!-- ==================== VIEW: MATERI ==================== -->
+    <section id="view-materi" class="space-y-6">
+      <!-- Hero Banner -->
+      <div class="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 rounded-2xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+        <div class="relative z-10 max-w-3xl">
+          <span class="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-semibold tracking-wide uppercase mb-3">
+            Materi Pembelajaran Peluang
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">
+            Memahami Peluang dengan Mudah &amp; Menyenangkan
+          </h2>
+          <p class="text-blue-100 text-sm sm:text-base leading-relaxed">
+            Pelajari konsep ruang sampel, peluang kejadian tunggal, membandingkan peluang, frekuensi relatif &amp; harapan, hingga penerapannya dalam kehidupan nyata.
+          </p>
+        </div>
+        <div class="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 gap-3 text-5xl opacity-90 animate-float select-none">
+          <span>🎲</span><span>🪙</span><span>🃏</span>
+        </div>
+      </div>
+
+      <!-- Info Cards: Tujuan, Capaian, Nilai Islami -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-900 flex items-center gap-2 mb-3">
+            <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-sm">🎯</span>
+            Tujuan Pembelajaran
+          </h3>
+          <ol class="space-y-1.5 text-sm text-slate-600 list-decimal list-inside">
+            <li>Mengidentifikasi dan menentukan ruang sampel.</li>
+            <li>Menghitung peluang suatu kejadian tunggal.</li>
+            <li>Membandingkan nilai peluang.</li>
+            <li>Menentukan frekuensi relatif dan frekuensi harapan.</li>
+            <li>Menerapkan konsep peluang dalam kehidupan nyata.</li>
+          </ol>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold text-slate-900 flex items-center gap-2 mb-3">
+              <span class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-sm">📘</span>
+              Capaian Pembelajaran
+            </h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Peserta didik mampu menjelaskan konsep peluang dan menggunakan ruang sampel, peluang suatu kejadian (tunggal), serta frekuensi relatif untuk menentukan frekuensi harapan pada percobaan sederhana.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>6 Bab Materi + Rangkuman</span>
+            <button type="button" id="cta-to-quiz" class="font-semibold text-indigo-600 hover:text-indigo-800">
+              Langsung ke Latihan Soal →
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-emerald-50/70 rounded-2xl p-5 border border-emerald-200 shadow-sm">
+          <h3 class="font-bold text-emerald-900 flex items-center gap-2 mb-2">
+            <span class="w-7 h-7 rounded-lg bg-emerald-200 text-emerald-800 flex items-center justify-center text-sm">🕌</span>
+            Nilai Islami
+          </h3>
+          <p class="text-sm text-emerald-900/90 leading-relaxed mb-2">
+            Peluang mengajarkan tentang <strong>keadilan</strong>, sedangkan Islam melarang perjudian karena dapat merugikan, menipu, dan menimbulkan ketidakadilan.
+          </p>
+          <p class="text-xs text-emerald-800 italic bg-white/70 rounded-xl p-2.5 border border-emerald-100">
+            “...Sesungguhnya setan hanyalah ingin menimbulkan permusuhan dan kebencian di antara kamu melalui minuman keras dan perjudian...” (QS Al-Mā’idah: 90–91)
+          </p>
+        </div>
+      </div>
+
+      <!-- Chapter Tabs -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="border-b border-slate-200 bg-slate-50 px-4 py-3">
+          <div id="chapter-tabs" class="flex flex-wrap gap-2">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+        <div id="chapter-content" class="p-5 sm:p-7">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW: LATIHAN SOAL ==================== -->
+    <section id="view-latihan" class="hidden space-y-6">
+
+      <!-- 1. Setup Screen -->
+      <div id="quiz-setup" class="space-y-6">
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-1">Latihan Soal Formatif</h2>
+          <p class="text-sm text-slate-600 mb-6">
+            Pilih paket soal formatif dan mode bermain (Individu atau Tim Rebutan 5 Tim).
+          </p>
+
+          <!-- Step 1: Pilih Paket Formatif -->
+          <div class="mb-6">
+            <label class="block text-sm font-bold text-slate-800 mb-3">1. Pilih Paket Soal Formatif</label>
+            <div id="formative-selector" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Step 2: Pilih Mode -->
+          <div class="mb-6">
+            <label class="block text-sm font-bold text-slate-800 mb-3">2. Pilih Mode Latihan</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button type="button" id="mode-btn-individu"
+                class="text-left p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/70 transition flex items-start gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xl shrink-0">
+                  👤
+                </div>
+                <div>
+                  <div class="font-bold text-slate-900">Mode Individu</div>
+                  <p class="text-xs text-slate-600 mt-1">
+                    Jawab soal secara mandiri. Skor langsung ditampilkan setelah selesai menjawab setiap soal formatif.
+                  </p>
+                </div>
+              </button>
+
+              <button type="button" id="mode-btn-tim"
+                class="text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-slate-300 transition flex items-start gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xl shrink-0">
+                  👥
+                </div>
+                <div>
+                  <div class="font-bold text-slate-900">Mode Tim (Rebutan 5 Tim)</div>
+                  <p class="text-xs text-slate-600 mt-1">
+                    Tersedia 5 tombol rebutan untuk menentukan tim mana yang berhak mengklik jawaban, lalu menampilkan skor akhir tiap tim.
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Team Names Config (only visible in Tim mode) -->
+          <div id="team-config-panel" class="hidden mb-6 bg-amber-50/60 border border-amber-200 rounded-2xl p-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h3 class="text-sm font-bold text-amber-900">Pengaturan 5 Tim (Default 5 Tim)</h3>
+              <span class="text-xs text-amber-700 font-medium">Tips: Bisa pakai tombol keyboard 1–5 untuk rebutan cepat!</span>
+            </div>
+            <div id="team-name-inputs" class="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <button type="button" id="start-quiz-btn"
+              class="w-full sm:w-auto px-7 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm sm:text-base shadow-sm transition flex items-center justify-center gap-2">
+              🚀 Mulai Latihan Soal
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Active Quiz Screen -->
+      <div id="quiz-active" class="hidden space-y-5">
+        <!-- Top Status Bar -->
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span id="quiz-badge" class="inline-block px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700 mb-1">
+              Formative 1
+            </span>
+            <h2 id="quiz-progress-text" class="text-base sm:text-lg font-extrabold text-slate-900">
+              Soal 1 dari 10
+            </h2>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="flex-1 max-w-xs hidden md:block">
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div id="quiz-progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-300" style="width: 10%;"></div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Individu Live Score Badge -->
+            <div id="individu-live-score" class="px-3.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-bold">
+              Skor: <span id="individu-score-val">0</span>
+            </div>
+            <button type="button" id="quit-quiz-btn"
+              class="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-xs font-semibold text-slate-600 transition">
+              Keluar
+            </button>
+          </div>
+        </div>
+
+        <!-- Team Scoreboard + 5 Buzzer Buttons (Only in Mode Tim) -->
+        <div id="team-buzzer-panel" class="hidden space-y-3">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                ⚡ Tombol Rebutan Tim (Klik / Tekan Angka 1–5)
+              </span>
+              <span id="buzzer-status-text" class="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
+                Menunggu tim menekan tombol rebutan...
+              </span>
+            </div>
+            <div id="team-buzzer-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+              <!-- 5 Buzzer Buttons rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="bg-white rounded-2xl p-5 sm:p-7 border border-slate-200 shadow-sm space-y-5">
+          <div class="flex items-start justify-between gap-3">
+            <p id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
+              Pertanyaan...
+            </p>
+          </div>
+
+          <!-- Lock notice for Team mode -->
+          <div id="team-lock-notice" class="hidden p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 text-sm font-medium flex items-center gap-2">
+            <span>🔒</span>
+            <span>Pilihan jawaban terkunci. Tekan salah satu dari <strong>5 tombol rebutan</strong> di atas terlebih dahulu!</span>
+          </div>
+
+          <!-- Options Grid -->
+          <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Feedback Area (Confetti / Sad Emoji + Score + Pembahasan) -->
+          <div id="feedback-box" class="hidden rounded-2xl p-4 sm:p-5 border transition-all">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="flex items-start gap-3.5">
+                <div id="feedback-emoji" class="text-4xl sm:text-5xl select-none shrink-0">🎉</div>
+                <div>
+                  <h4 id="feedback-title" class="text-lg font-extrabold">Benar!</h4>
+                  <p id="feedback-desc" class="text-sm mt-0.5 leading-relaxed"></p>
+                  <p id="feedback-score-info" class="text-xs font-bold mt-2 inline-block px-2.5 py-1 rounded-lg bg-white/80 border border-black/10"></p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-2 shrink-0">
+                <button type="button" id="next-question-btn"
+                  class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold transition shadow-sm">
+                  Soal Berikutnya →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Final Result Screen -->
+      <div id="quiz-result" class="hidden bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm text-center space-y-6">
+        <div id="result-header" class="space-y-2">
+          <div id="result-icon" class="text-6xl animate-pop">🏆</div>
+          <h2 id="result-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900">Latihan Selesai!</h2>
+          <p id="result-subtitle" class="text-sm sm:text-base text-slate-600"></p>
+        </div>
+
+        <!-- Individu Result Summary -->
+        <div id="result-individu-box" class="hidden max-w-md mx-auto bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-4">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Skor Akhir Kamu</div>
+            <div id="final-individu-score" class="text-5xl font-extrabold text-indigo-600 mt-1">100</div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200 text-sm">
+            <div class="bg-emerald-50 text-emerald-800 rounded-xl p-3 font-bold">
+              ✅ Benar: <span id="final-individu-correct">0</span>
+            </div>
+            <div class="bg-rose-50 text-rose-800 rounded-xl p-3 font-bold">
+              😢 Salah: <span id="final-individu-wrong">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Result Leaderboard -->
+        <div id="result-tim-box" class="hidden max-w-2xl mx-auto space-y-3 text-left">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-500 text-center mb-3">
+            🏅 Skor Akhir Tiap Tim (Peringkat)
+          </h3>
+          <div id="final-team-list" class="space-y-2.5">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3 pt-2">
+          <button type="button" id="retry-quiz-btn"
+            class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm transition">
+            🔄 Ulangi Formatif Ini
+          </button>
+          <button type="button" id="back-to-setup-btn"
+            class="px-5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm transition">
+            📋 Pilih Formatif / Mode Lain
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-200 bg-white py-4 mt-8">
+    <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-500">
+      TEMAN BELAJAR PELUANG • Matematika Kelas IX Kurikulum Merdeka
+    </div>
+  </footer>
+
+  <script>
+    // ==================== DATA MATERI (Dari MATERI PELUANG.pdf) ====================
+    const CHAPTERS = [
+      {
+        id: 'bab-a',
+        badge: 'Bab A',
+        title: 'Ruang Sampel & Titik Sampel',
+        html: `
+          <div class="space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Materi A</span>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">Ruang Sampel dan Titik Sampel</h3>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">Apa saja kemungkinan hasil dari suatu percobaan?</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+                <h4 class="font-bold text-amber-900 mb-1.5">1. Percobaan (Eksperimen)</h4>
+                <p class="text-sm text-slate-700 mb-2">Kegiatan yang dapat menghasilkan beberapa kemungkinan hasil.</p>
+                <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                  <li>Melempar sebuah koin</li>
+                  <li>Melempar sebuah dadu</li>
+                  <li>Mengambil satu kartu dari satu set kartu</li>
+                </ul>
+              </div>
+              <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-200">
+                <h4 class="font-bold text-blue-900 mb-1.5">2. Ruang Sampel (S)</h4>
+                <p class="text-sm text-slate-700">Himpunan semua hasil yang mungkin dari suatu percobaan.</p>
+                <div class="mt-3 inline-block px-3 py-1 rounded-lg bg-white border border-blue-200 text-xs font-bold text-blue-800">
+                  Dilambangkan dengan S
+                </div>
+              </div>
+              <div class="p-4 rounded-xl bg-rose-50/70 border border-rose-200">
+                <h4 class="font-bold text-rose-900 mb-1.5">3. Titik Sampel</h4>
+                <p class="text-sm text-slate-700">Setiap anggota dari ruang sampel, yaitu satu hasil yang mungkin terjadi dari suatu percobaan.</p>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-900 mb-3">Contoh dan Pembahasan</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                  <div class="font-bold text-slate-800 mb-2">a. Melempar satu koin 🪙</div>
+                  <p class="text-sm text-slate-700"><strong>Ruang sampel:</strong> S = {A, G}</p>
+                  <p class="text-sm text-slate-700"><strong>Titik sampel:</strong> A dan G</p>
+                  <div class="mt-2 inline-block px-2.5 py-1 rounded-lg bg-pink-100 text-pink-800 font-bold text-xs">n(S) = 2</div>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                  <div class="font-bold text-slate-800 mb-2">b. Melempar satu dadu 🎲</div>
+                  <p class="text-sm text-slate-700"><strong>Ruang sampel:</strong> S = {1, 2, 3, 4, 5, 6}</p>
+                  <p class="text-sm text-slate-700"><strong>Titik sampel:</strong> 1, 2, 3, 4, 5, 6</p>
+                  <div class="mt-2 inline-block px-2.5 py-1 rounded-lg bg-pink-100 text-pink-800 font-bold text-xs">n(S) = 6</div>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                  <div class="font-bold text-slate-800 mb-2">c. Melempar dua koin sekaligus 🪙🪙</div>
+                  <p class="text-sm text-slate-700"><strong>Ruang sampel:</strong> S = {AA, AG, GA, GG}</p>
+                  <p class="text-sm text-slate-700"><strong>Titik sampel:</strong> AA, AG, GA, GG</p>
+                  <div class="mt-2 inline-block px-2.5 py-1 rounded-lg bg-pink-100 text-pink-800 font-bold text-xs">n(S) = 4</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl bg-indigo-50 border border-indigo-200">
+                <h4 class="font-bold text-indigo-900 mb-1">Pola Umum Banyaknya Anggota Ruang Sampel</h4>
+                <p class="text-xs text-slate-700 mb-2">Jika percobaan terdiri atas beberapa tahap yang saling bebas:</p>
+                <div class="p-3 bg-white rounded-xl border border-indigo-200 text-center font-extrabold text-indigo-800 text-base">
+                  n(S) = n₁ × n₂ × … × nₖ
+                </div>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-1.5">💡 Tahukah Kamu?</h4>
+                <p class="text-xs text-slate-600 mb-1.5">Ruang sampel dapat dituliskan dengan:</p>
+                <ul class="text-xs text-slate-700 space-y-1 list-disc list-inside">
+                  <li>Mendaftar semua anggota himpunan, misal S = {1, 2, 3, 4, 5, 6}.</li>
+                  <li>Notasi pola pasangan terurut, misal S = {(A,1), (A,2), …, (G,6)}.</li>
+                  <li>Menggunakan diagram pohon atau tabel (untuk percobaan bertahap).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'bab-b',
+        badge: 'Bab B',
+        title: 'Menentukan Ruang Sampel',
+        html: `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Materi B</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">Menentukan Ruang Sampel</h3>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-900 mb-3">Strategi Menentukan Ruang Sampel</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="p-4 rounded-xl bg-rose-50/70 border border-rose-200">
+                  <div class="font-bold text-rose-900 mb-1">1. Mendaftar Semua Kemungkinan</div>
+                  <p class="text-xs text-slate-700">Menuliskan seluruh hasil yang mungkin satu per satu.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200">
+                  <div class="font-bold text-indigo-900 mb-1">2. Pasangan Berurutan ( , )</div>
+                  <p class="text-xs text-slate-700">Menuliskan hasil dalam bentuk pasangan terurut, misal: (A, 1).</p>
+                </div>
+                <div class="p-4 rounded-xl bg-amber-50/70 border border-amber-200">
+                  <div class="font-bold text-amber-900 mb-1">3. Diagram Pohon</div>
+                  <p class="text-xs text-slate-700">Menggambarkan cabang kemungkinan hasil dari setiap tahap.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                <h5 class="font-bold text-slate-900 mb-1">1. Melempar dua dadu sekaligus 🎲🎲</h5>
+                <p class="text-xs text-slate-700 mb-2">S = {(1,1), (1,2), …, (1,6), (2,1), …, (6,6)}</p>
+                <span class="inline-block px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 font-bold text-xs">n(S) = 6 × 6 = 36</span>
+              </div>
+              <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                <h5 class="font-bold text-slate-900 mb-1">2. Melempar satu koin dan satu dadu 🪙🎲</h5>
+                <p class="text-xs text-slate-700 mb-2">S = {(A,1), (A,2), …, (A,6), (G,1), …, (G,6)}</p>
+                <span class="inline-block px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 font-bold text-xs">n(S) = 2 × 6 = 12</span>
+              </div>
+              <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                <h5 class="font-bold text-slate-900 mb-1">3. Mengambil satu kartu dari satu set Bridge 🃏</h5>
+                <p class="text-xs text-slate-700 mb-2">4 jenis kartu (♠, ♥, ♦, ♣) × 13 kartu (A, 2–10, J, Q, K).</p>
+                <span class="inline-block px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 font-bold text-xs">n(S) = 4 × 13 = 52</span>
+              </div>
+              <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                <h5 class="font-bold text-slate-900 mb-1">4. Melempar dua koin dan satu dadu 🪙🪙🎲</h5>
+                <p class="text-xs text-slate-700 mb-2">Menggunakan pola perkalian gabungan: n(S) = n₁ × n₂ × n₃</p>
+                <span class="inline-block px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 font-bold text-xs">n(S) = 2 × 2 × 6 = 24</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+              <h4 class="font-bold text-emerald-900 mb-1">Kesimpulan</h4>
+              <p class="text-sm text-emerald-900/90">
+                Pasangan (A, G) dan (G, A) dianggap sebagai <strong>dua titik sampel yang berbeda</strong> karena urutan kemunculannya berbeda.
+              </p>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'bab-c',
+        badge: 'Bab C',
+        title: 'Peluang Kejadian Tunggal',
+        html: `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Materi C</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">Peluang Suatu Kejadian Tunggal</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-5 rounded-xl bg-blue-50/70 border border-blue-200">
+                <h4 class="font-bold text-blue-900 mb-1.5">1. Apa itu Peluang?</h4>
+                <p class="text-sm text-slate-700 mb-3">
+                  Peluang adalah ukuran kemungkinan terjadinya suatu kejadian dari suatu percobaan. Nilai peluang selalu berada pada interval:
+                </p>
+                <div class="p-2.5 bg-white rounded-xl border border-blue-200 text-center font-extrabold text-rose-700">
+                  0 ≤ P(A) ≤ 1
+                </div>
+              </div>
+              <div class="p-5 rounded-xl bg-amber-50/70 border border-amber-200">
+                <h4 class="font-bold text-amber-900 mb-1.5">2. Rumus Peluang</h4>
+                <div class="p-3 bg-white rounded-xl border border-amber-200 text-center text-lg font-extrabold text-slate-900 mb-2">
+                  P(A) = <span class="math-frac"><span class="num">n(A)</span><span class="den">n(S)</span></span>
+                </div>
+                <ul class="text-xs text-slate-700 space-y-0.5">
+                  <li><strong>P(A)</strong>: peluang kejadian A</li>
+                  <li><strong>n(A)</strong>: banyaknya titik sampel yang memenuhi kejadian A</li>
+                  <li><strong>n(S)</strong>: banyaknya anggota ruang sampel</li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-900 mb-3">3. Contoh dan Pembahasan</h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                  <div class="font-bold text-slate-900 mb-1">1) Dadu dilempar sekali: Peluang angka genap</div>
+                  <p class="text-xs text-slate-600">S = {1,2,3,4,5,6}, n(S) = 6 • A = {2,4,6}, n(A) = 3</p>
+                  <p class="text-sm font-bold text-indigo-700 mt-2">
+                    P(A) = <span class="math-frac"><span class="num">3</span><span class="den">6</span></span> = <span class="math-frac"><span class="num">1</span><span class="den">2</span></span>
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                  <div class="font-bold text-slate-900 mb-1">2) Koin dilempar sekali: Peluang muncul gambar</div>
+                  <p class="text-xs text-slate-600">S = {A, G}, n(S) = 2 • A = {G}, n(A) = 1</p>
+                  <p class="text-sm font-bold text-indigo-700 mt-2">
+                    P(A) = <span class="math-frac"><span class="num">1</span><span class="den">2</span></span>
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                  <div class="font-bold text-slate-900 mb-1">3) Satu kartu Bridge: Peluang kartu hati (♥)</div>
+                  <p class="text-xs text-slate-600">n(S) = 52 • Kartu hati (♥) ada 13 kartu, n(A) = 13</p>
+                  <p class="text-sm font-bold text-indigo-700 mt-2">
+                    P(A) = <span class="math-frac"><span class="num">13</span><span class="den">52</span></span> = <span class="math-frac"><span class="num">1</span><span class="den">4</span></span>
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                  <div class="font-bold text-slate-900 mb-1">4) Dua koin sekaligus: Peluang dua gambar</div>
+                  <p class="text-xs text-slate-600">S = {AA, AG, GA, GG}, n(S) = 4 • A = {GG}, n(A) = 1</p>
+                  <p class="text-sm font-bold text-indigo-700 mt-2">
+                    P(A) = <span class="math-frac"><span class="num">1</span><span class="den">4</span></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'bab-d',
+        badge: 'Bab D',
+        title: 'Membandingkan Peluang',
+        html: `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Materi D</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">Membandingkan Peluang</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <h4 class="font-bold text-slate-900 mb-2">1. Skala Nilai Peluang (0 ≤ P(A) ≤ 1)</h4>
+                <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                  <div class="p-2.5 rounded-xl bg-rose-100 text-rose-900">
+                    <div class="text-base font-extrabold">0</div>
+                    <div>Mustahil terjadi</div>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-amber-100 text-amber-900">
+                    <div class="text-base font-extrabold">0,5</div>
+                    <div>Kemungkinan sedang</div>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-emerald-100 text-emerald-900">
+                    <div class="text-base font-extrabold">1</div>
+                    <div>Pasti terjadi</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-indigo-50/70 border border-indigo-200">
+                <h4 class="font-bold text-indigo-900 mb-2">2. Aturan Membandingkan Peluang</h4>
+                <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5">
+                  <li>• Jika <strong>P(A) &gt; P(B)</strong> → kejadian A lebih besar peluangnya daripada B.</li>
+                  <li>• Jika <strong>P(A) &lt; P(B)</strong> → kejadian A lebih kecil peluangnya daripada B.</li>
+                  <li>• Jika <strong>P(A) = P(B)</strong> → kedua kejadian memiliki peluang yang sama besar.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl border border-slate-200 bg-white">
+                <h5 class="font-bold text-slate-900 mb-1">Contoh 1: Dadu Dilempar Sekali</h5>
+                <p class="text-xs text-slate-600 mb-2">A = muncul angka genap, B = muncul angka 5</p>
+                <p class="text-sm text-slate-800">
+                  P(A) = 3/6 = <strong>1/2</strong> &nbsp;|&nbsp; P(B) = <strong>1/6</strong>
+                </p>
+                <p class="text-xs text-indigo-700 font-semibold mt-2">
+                  Karena 1/2 &gt; 1/6, maka peluang A lebih besar daripada peluang B.
+                </p>
+              </div>
+              <div class="p-4 rounded-xl border border-slate-200 bg-white">
+                <h5 class="font-bold text-slate-900 mb-1">Contoh 2: Dua Kartu Bridge (Merah vs Hitam)</h5>
+                <p class="text-xs text-slate-600 mb-2">Kartu merah = 26 (♥, ♦) • Kartu hitam = 26 (♠, ♣) • n(S) = 52</p>
+                <p class="text-sm text-slate-800">
+                  P(merah) = 26/52 = <strong>1/2</strong> &nbsp;|&nbsp; P(hitam) = 26/52 = <strong>1/2</strong>
+                </p>
+                <p class="text-xs text-emerald-700 font-semibold mt-2">
+                  P(merah) = P(hitam), sehingga peluang terambilnya kartu merah dan hitam sama besar.
+                </p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'bab-e',
+        badge: 'Bab E',
+        title: 'Frekuensi Relatif & Harapan',
+        html: `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Materi E</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">Frekuensi Relatif dan Frekuensi Harapan</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-5 rounded-xl bg-amber-50/70 border border-amber-200">
+                <h4 class="font-bold text-amber-900 mb-1">1. Frekuensi Relatif (Empirik)</h4>
+                <p class="text-xs text-slate-700 mb-3">Perbandingan banyaknya suatu kejadian yang terjadi dengan banyaknya seluruh percobaan.</p>
+                <div class="p-3 bg-white rounded-xl border border-amber-200 text-center font-extrabold text-slate-900">
+                  FR(A) = <span class="math-frac"><span class="num">f(A)</span><span class="den">n</span></span>
+                </div>
+                <p class="text-xs text-slate-600 mt-2">f(A) = frekuensi kejadian A, n = banyaknya percobaan</p>
+              </div>
+
+              <div class="p-5 rounded-xl bg-blue-50/70 border border-blue-200">
+                <h4 class="font-bold text-blue-900 mb-1">2. Frekuensi Harapan (Teoretis)</h4>
+                <p class="text-xs text-slate-700 mb-3">Banyaknya kemunculan suatu kejadian yang diperkirakan terjadi pada sejumlah percobaan tertentu.</p>
+                <div class="p-3 bg-white rounded-xl border border-blue-200 text-center font-extrabold text-slate-900">
+                  Fₕ(A) = P(A) × n
+                </div>
+                <p class="text-xs text-slate-600 mt-2">P(A) = peluang kejadian A, n = banyaknya percobaan</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                <h5 class="font-bold text-slate-900 mb-2">Contoh 1: Frekuensi Relatif</h5>
+                <p class="text-xs text-slate-700 mb-2">Sebuah dadu dilempar 30 kali dengan hasil:</p>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-xs text-center border border-slate-300 bg-white">
+                    <thead class="bg-indigo-600 text-white">
+                      <tr><th class="p-1.5 border">Mata dadu</th><th class="p-1.5 border">1</th><th class="p-1.5 border">2</th><th class="p-1.5 border">3</th><th class="p-1.5 border">4</th><th class="p-1.5 border">5</th><th class="p-1.5 border">6</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td class="p-1.5 border font-semibold">Frekuensi</td><td class="p-1.5 border">6</td><td class="p-1.5 border">4</td><td class="p-1.5 border">5</td><td class="p-1.5 border">5</td><td class="p-1.5 border">6</td><td class="p-1.5 border">4</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="text-xs text-slate-700 mt-2">Angka genap (2, 4, 6): f(A) = 4 + 5 + 4 = 13, n = 30</p>
+                <p class="text-sm font-bold text-indigo-700 mt-1">FR(A) = 13 / 30</p>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+                <div>
+                  <h5 class="font-bold text-slate-900 mb-2">Contoh 2: Frekuensi Harapan</h5>
+                  <p class="text-xs text-slate-700 mb-2">Sebuah dadu dilempar 60 kali. Tentukan frekuensi harapan muncul angka 5!</p>
+                  <p class="text-xs text-slate-700">• P(angka 5) = 1/6 &nbsp; • n = 60</p>
+                  <p class="text-sm font-bold text-indigo-700 mt-2">Fₕ(A) = (1/6) × 60 = 10 kali</p>
+                </div>
+                <div class="mt-3 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+                  <strong>Catatan:</strong> Pada banyak percobaan, nilai frekuensi relatif cenderung mendekati peluang teoretis: <strong>FR(A) ≈ P(A)</strong>.
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'bab-f',
+        badge: 'Bab F',
+        title: 'Penerapan Kehidupan Nyata',
+        html: `
+          <div class="space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-600">Materi F</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">Penerapan Peluang dalam Kehidupan Nyata</h3>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div class="p-4 rounded-xl bg-sky-50 border border-sky-200">
+                <div class="text-2xl mb-1">🌦️</div>
+                <h4 class="font-bold text-sky-900 text-sm mb-1">Prakiraan Cuaca</h4>
+                <p class="text-xs text-slate-700">Peluang hujan 70% (0,7) → panitia menyiapkan payung, tenda, atau lokasi indoor.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                <div class="text-2xl mb-1">🗺️</div>
+                <h4 class="font-bold text-emerald-900 text-sm mb-1">Pemilihan Rute</h4>
+                <p class="text-xs text-slate-700">Memilih rute perjalanan yang memiliki peluang macet atau hambatan lebih kecil.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
+                <div class="text-2xl mb-1">🎪</div>
+                <h4 class="font-bold text-amber-900 text-sm mb-1">Perencanaan Kegiatan</h4>
+                <p class="text-xs text-slate-700">20 lampu dengan peluang rusak 1/20 → frekuensi harapan rusak = 1 lampu (siapkan cadangan).</p>
+              </div>
+              <div class="p-4 rounded-xl bg-indigo-50 border border-indigo-200">
+                <div class="text-2xl mb-1">🗳️</div>
+                <h4 class="font-bold text-indigo-900 text-sm mb-1">Pengundian yang Adil</h4>
+                <p class="text-xs text-slate-700">4 kelompok diundi → setiap kelompok memiliki peluang tampil pertama yang sama: 1/4.</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <h4 class="font-bold text-slate-900 mb-3">4 Langkah Menggunakan Peluang dalam Pengambilan Keputusan</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-xs">
+                <div class="p-3 rounded-xl bg-white border border-slate-200 font-semibold text-slate-800">1. Mengidentifikasi masalah</div>
+                <div class="p-3 rounded-xl bg-white border border-slate-200 font-semibold text-slate-800">2. Mengumpulkan informasi relevan</div>
+                <div class="p-3 rounded-xl bg-white border border-slate-200 font-semibold text-slate-800">3. Menganalisis peluang / Fₕ</div>
+                <div class="p-3 rounded-xl bg-white border border-slate-200 font-semibold text-slate-800">4. Menentukan keputusan tepat</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'rangkuman',
+        badge: 'Rangkuman',
+        title: 'Rangkuman Materi Peluang',
+        html: `
+          <div class="space-y-5">
+            <div class="border-b border-slate-100 pb-4">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Ringkasan Cepat</span>
+              <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900">Rangkuman Materi Peluang</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="font-bold text-indigo-700 mb-1">1. Ruang &amp; Titik Sampel</div>
+                <p class="text-xs text-slate-700">Ruang sampel (S): himpunan semua hasil yang mungkin. Titik sampel: setiap anggota S.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="font-bold text-indigo-700 mb-1">2. Menentukan Ruang Sampel</div>
+                <p class="text-xs text-slate-700">Dengan mendaftar, pasangan berurutan, atau diagram pohon.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="font-bold text-indigo-700 mb-1">3. Peluang Kejadian</div>
+                <p class="text-xs text-slate-700"><strong>P(A) = n(A) / n(S)</strong> dengan nilai <strong>0 ≤ P(A) ≤ 1</strong>.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="font-bold text-indigo-700 mb-1">4. Membandingkan Peluang</div>
+                <p class="text-xs text-slate-700">Bandingkan P(A) dan P(B): lebih besar (&gt;), lebih kecil (&lt;), atau sama besar (=).</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="font-bold text-indigo-700 mb-1">5. Frekuensi Relatif</div>
+                <p class="text-xs text-slate-700"><strong>FR(A) = f(A) / n</strong> (dari hasil percobaan nyata).</p>
+              </div>
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="font-bold text-indigo-700 mb-1">6. Frekuensi Harapan</div>
+                <p class="text-xs text-slate-700"><strong>Fₕ(A) = P(A) × n</strong> (perkiraan kemunculan dalam n percobaan).</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs sm:text-sm text-amber-950">
+              <strong>Ingat!</strong> Semakin banyak hasil yang mendukung kejadian, semakin besar peluangnya. Frekuensi relatif cenderung mendekati peluang teoretis jika percobaan dilakukan semakin banyak.
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    // ==================== DATA FORMATIF (Dari STUDENT WORKSHEET PROBABILITY.pdf) ====================
+    const FORMATIVES = [
+      {
+        id: 'f1',
+        title: 'Formatif 1: Sample Space',
+        subtitle: '10 Soal • Ruang Sampel & Titik Sampel',
+        questions: [
+          { q: 'The sample space of tossing one coin is…', opts: ['{H}', '{T}', '{H, T}', '{Heads only}'], ans: 2, exp: 'Melempar 1 koin memiliki 2 kemungkinan: Heads (H) atau Tails (T), sehingga S = {H, T}.' },
+          { q: 'The sample space of rolling one die is…', opts: ['{1,2,3,4}', '{1,2,3,4,5,6}', '{even numbers only}', '{1,3,5}'], ans: 1, exp: 'Satu dadu bersisi 6 memiliki ruang sampel S = {1, 2, 3, 4, 5, 6}.' },
+          { q: 'The sample space of drawing a card numbered 1–5 is…', opts: ['{1,3,5}', '{2,4}', '{1,2,3,4,5}', '{5}'], ans: 2, exp: 'Semua kartu bernomor 1 sampai 5 adalah {1, 2, 3, 4, 5}.' },
+          { q: 'Tossing a coin twice: number of outcomes…', opts: ['2', '3', '4', '6'], ans: 2, exp: 'n(S) = 2 × 2 = 4, yaitu {HH, HT, TH, TT}.' },
+          { q: 'Which is a possible outcome of rolling a die?', opts: ['0', '7', '3', '8'], ans: 2, exp: 'Mata dadu standar adalah 1 sampai 6, sehingga 3 adalah hasil yang mungkin.' },
+          { q: 'The sample space of tossing two coins is…', opts: ['{H,T}', '{H,H}', '{HH, HT, TH, TT}', '{HT, TT}'], ans: 2, exp: 'Dua koin menghasilkan 4 pasangan: {HH, HT, TH, TT}.' },
+          { q: 'The sample space of odd cards from {1–5} is…', opts: ['{1,3,5}', '{1,2,3}', '{2,4}', '{5}'], ans: 0, exp: 'Bilangan ganjil pada {1, 2, 3, 4, 5} adalah {1, 3, 5}.' },
+          { q: 'Coin + Die sample space consists of…', opts: ['Ordered pairs', 'Only 1–6', 'Only H,T', 'Only even numbers'], ans: 0, exp: 'Gabungan koin dan dadu ditulis sebagai pasangan berurutan (ordered pairs), seperti (H, 1), ..., (T, 6).' },
+          { q: 'Which experiment has 6 outcomes?', opts: ['Toss 1 coin', 'Draw card 1–5', 'Roll die', 'Toss 2 coins'], ans: 2, exp: 'Melempar 1 dadu memiliki 6 kemungkinan hasil.' },
+          { q: 'Drawing a card 1–5: which is NOT an element?', opts: ['1', '5', '6', '3'], ans: 2, exp: 'Angka 6 tidak ada di dalam set kartu bernomor 1–5.' }
+        ]
+      },
+      {
+        id: 'f2',
+        title: 'Formatif 2: Single Event Probability',
+        subtitle: '10 Soal • Peluang Kejadian Tunggal',
+        questions: [
+          { q: 'P(Heads) is…', opts: ['0', '1/2', '1', '2/3'], ans: 1, exp: 'S = {H, T}, n(S) = 2, n(Heads) = 1 → P(Heads) = 1/2.' },
+          { q: 'P(getting 6) on die…', opts: ['1/6', '1/3', '1/2', '2/6'], ans: 0, exp: 'Hanya ada satu sisi angka 6 dari 6 sisi dadu → 1/6.' },
+          { q: 'P(odd card from 1–5)…', opts: ['1/5', '2/5', '3/5', '4/5'], ans: 2, exp: 'Kartu ganjil {1, 3, 5} ada 3 dari 5 kartu → 3/5.' },
+          { q: 'P(even number on die)…', opts: ['3/6', '2/6', '1/6', '0'], ans: 0, exp: 'Angka genap {2, 4, 6} ada 3 dari 6 → 3/6.' },
+          { q: 'P(1 or 2) on die…', opts: ['1/6', '2/6', '3/6', '4/6'], ans: 1, exp: 'Ada 2 hasil yang memenuhi {1, 2} dari 6 → 2/6.' },
+          { q: 'P(number >3 from 1–5)…', opts: ['1/5', '2/5', '3/5', '4/5'], ans: 1, exp: 'Angka > 3 dari {1..5} adalah {4, 5}, ada 2 dari 5 → 2/5.' },
+          { q: 'P(Tails)…', opts: ['1', '1/2', '1/3', '0'], ans: 1, exp: 'S = {H, T} → P(Tails) = 1/2.' },
+          { q: 'Event with one favorable outcome…', opts: ['drawing 3', 'rolling even', 'rolling odd', 'drawing 1–3'], ans: 0, exp: 'Mengambil kartu angka 3 hanya memiliki 1 hasil yang memenuhi.' },
+          { q: 'P(rolling 5)…', opts: ['1/2', '1/3', '1/6', '1/12'], ans: 2, exp: 'Angka 5 muncul 1 kali dari 6 sisi dadu → 1/6.' },
+          { q: 'P(Heads and 6) in coin+die…', opts: ['1/2', '1/6', '1/12', '1/3'], ans: 2, exp: 'n(S) = 2 × 6 = 12, hanya ada 1 pasangan (H, 6) → 1/12.' }
+        ]
+      },
+      {
+        id: 'f3',
+        title: 'Formatif 3: Comparing Probabilities',
+        subtitle: '10 Soal • Membandingkan Peluang',
+        questions: [
+          { q: 'Which event is more likely on a die?', opts: ['Rolling 1', 'Rolling 2', 'Rolling an even number', 'Rolling 7'], ans: 2, exp: 'Angka genap punya 3 peluang (3/6), sedangkan 1 atau 2 hanya 1/6, dan 7 mustahil (0).' },
+          { q: 'Which event is less likely?', opts: ['Getting Heads', 'Getting Tails', 'Getting Heads twice in a row', 'Getting any side on a die'], ans: 2, exp: 'Heads dua kali berturut-turut peluangnya 1/4 (paling kecil dibanding 1/2 dan 1).' },
+          { q: 'Which event has the highest probability?', opts: ['Rolling 6', 'Rolling an odd number', 'Rolling 3', 'Rolling 0'], ans: 1, exp: 'Rolling odd = 3/6 = 1/2, lebih besar dari 1/6 dan 0.' },
+          { q: 'Which event is impossible?', opts: ['Rolling 2', 'Rolling 7', 'Rolling even number', 'Rolling any number from 1–6'], ans: 1, exp: 'Dadu hanya memiliki angka 1–6, sehingga muncul angka 7 mustahil (P = 0).' },
+          { q: 'Which is more likely when drawing from {1–5}?', opts: ['Getting 5 only', 'Getting any odd number', 'Getting numbers >4', 'Getting even only'], ans: 1, exp: 'Bilangan ganjil {1,3,5} berpeluang 3/5, lebih besar dari genap (2/5) dan >4 (1/5).' },
+          { q: 'Which is equally likely?', opts: ['Heads/Tails', 'Rolling 1/rolling 6', 'Drawing 1/drawing 5', 'All of the above'], ans: 3, exp: 'Ketiga pasangan kejadian pada opsi A, B, dan C masing-masing memiliki peluang sama besar.' },
+          { q: 'Which event has two favorable outcomes?', opts: ['Rolling >4', 'Rolling odd', 'Rolling even', 'Rolling 1'], ans: 0, exp: 'Angka > 4 pada dadu adalah {5, 6}, tepat ada 2 titik sampel.' },
+          { q: 'In coin+die, which outcome is possible (not impossible)?', opts: ['(H,7)', '(T,0)', '(H,2)', '(T,8)'], ans: 2, exp: 'Pada dadu 1–6, hanya (H,2) yang termasuk ruang sampel (P = 1/12); angka 0, 7, dan 8 mustahil.' },
+          { q: 'Which gives the smallest probability?', opts: ['Rolling 3', 'Rolling an odd number', 'Rolling >6', 'Rolling <6'], ans: 2, exp: 'Rolling > 6 pada dadu 1–6 adalah mustahil sehingga peluangnya 0 (paling kecil).' },
+          { q: 'Which event is certain for rolling a die?', opts: ['Getting a number <7', 'Getting number 0', 'Getting only even', 'Getting only odd'], ans: 0, exp: 'Semua angka dadu (1–6) pasti kurang dari 7, sehingga peluangnya = 1 (pasti).' }
+        ]
+      },
+      {
+        id: 'f4',
+        title: 'Formatif 4: Relative & Expected Freq.',
+        subtitle: '10 Soal • Frekuensi Relatif & Harapan',
+        questions: [
+          { q: 'Relative frequency is calculated by…', opts: ['favorable outcomes', 'experimental outcomes ÷ total trials', 'theoretical probability × 100', 'total outcomes ÷ favorable outcomes'], ans: 1, exp: 'FR(A) = banyaknya kejadian muncul pada percobaan ÷ total percobaan.' },
+          { q: 'The theoretical probability of getting a sum of 7 in two dice is…', opts: ['1/36', '3/36', '6/36', '12/36'], ans: 2, exp: 'Jumlah 7 ada 6 pasangan: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) dari 36 → 6/36.' },
+          { q: 'If an event occurs 9 times in 30 trials, its relative frequency is…', opts: ['9', '9/30', '3/30', '1/9'], ans: 1, exp: 'FR = f(A) / n = 9 / 30.' },
+          { q: 'Expected frequency is found by…', opts: ['total outcomes × relative frequency', 'theoretical probability × number of trials', 'experimental data ÷ 2', 'favorable outcomes × 6'], ans: 1, exp: 'Rumus frekuensi harapan adalah Fₕ(A) = P(A) × n.' },
+          { q: 'The sum that usually appears most frequently in two-dice experiments is…', opts: ['2', '7', '12', '3'], ans: 1, exp: 'Jumlah 7 memiliki kombinasi terbanyak (6/36), sehingga paling sering muncul.' },
+          { q: 'If P(sum = 10) = 3/36, the expected frequency in 36 trials is…', opts: ['3', '6', '9', '12'], ans: 0, exp: 'Fₕ = (3/36) × 36 = 3 kali.' },
+          { q: 'When relative frequency becomes close to theoretical probability, it means…', opts: ['the experiment is incorrect', 'the dice are biased', 'enough trials were conducted', 'probability cannot be predicted'], ans: 2, exp: 'Semakin banyak percobaan dilakukan, frekuensi relatif mendekati peluang teoretis.' },
+          { q: 'The sum 2 appears less often because…', opts: ['it has many combinations', 'it has only one combination', 'it is impossible', 'dice are unfair'], ans: 1, exp: 'Jumlah 2 hanya berasal dari satu kombinasi, yaitu (1, 1).' },
+          { q: 'Increasing the number of trials will generally make the relative frequency…', opts: ['closer to theoretical probability', 'equal to 0', 'farther from theoretical probability', 'random without pattern'], ans: 0, exp: 'Penambahan jumlah percobaan membuat FR(A) semakin mendekati P(A).' },
+          { q: 'If an event never appears in 30 trials, its relative frequency is…', opts: ['1', '0', '30', 'undefined'], ans: 1, exp: 'FR = 0 / 30 = 0.' }
+        ]
+      },
+      {
+        id: 'f5',
+        title: 'Formatif 5: Real-Life Probability',
+        subtitle: '10 Soal • Penerapan Kehidupan Nyata',
+        questions: [
+          { q: 'A weather app says the chance of rain tomorrow is 70%. What should the outdoor event committee do?', opts: ['Cancel all games immediately', 'Prepare tents or indoor backup', 'Ignore the forecast completely', 'Assume rain is impossible'], ans: 1, exp: 'Peluang hujan 70% (0,7) cukup besar sehingga panitia sebaiknya menyiapkan tenda/payung atau alternatif ruangan.' },
+          { q: 'The committee uses a coin toss to decide which team goes first. What is P(Team A wins the toss)?', opts: ['1/4', '1/2', '1/3', '1'], ans: 1, exp: 'Koin memiliki 2 sisi yang sama peluangnya, jadi P(menang) = 1/2 (adil).' },
+          { q: 'Cards numbered 1–5 are used for bonus points. Which event is more likely: getting an even number or getting > 3?', opts: ['Both have the same probability (2/5)', 'Even number is more likely (3/5)', 'Number > 3 is more likely (3/5)', 'Neither can happen'], ans: 0, exp: 'Bilangan genap {2,4} = 2/5 dan bilangan > 3 {4,5} = 2/5, keduanya sama besar.' },
+          { q: 'Teams rotate if a die shows > 4. If the die is rolled 30 times, how many times is the team expected to rotate?', opts: ['5 times', '10 times', '15 times', '20 times'], ans: 1, exp: 'P(> 4) = P({5,6}) = 2/6 = 1/3. Frekuensi harapan = (1/3) × 30 = 10 kali.' },
+          { q: 'A student wins a special prize if coin + die shows (Heads AND even number). What is the probability of winning?', opts: ['1/12', '3/12 (or 1/4)', '6/12 (or 1/2)', '2/12'], ans: 1, exp: 'n(S) = 12; hasil memenuhi {(H,2), (H,4), (H,6)} ada 3 → P = 3/12 = 1/4.' },
+          { q: 'You have 5 snacks in a bag: 2 healthy and 3 sweet. What is the probability of picking a healthy snack?', opts: ['1/5', '2/5', '3/5', '2/3'], ans: 1, exp: '2 snack sehat dari total 5 snack → P = 2/5.' },
+          { q: 'A teacher gives a reward if a die shows 1 or 2. If played 24 times, what is the expected number of rewards?', opts: ['4 rewards', '6 rewards', '8 rewards', '12 rewards'], ans: 2, exp: 'P(1 atau 2) = 2/6 = 1/3. Frekuensi harapan = (1/3) × 24 = 8 kali.' },
+          { q: 'Choosing a leader randomly among 32 students: what is the probability that one specific student is chosen?', opts: ['1/16', '1/32', '2/32', '1/64'], ans: 1, exp: 'Setiap siswa memiliki kesempatan yang sama, yaitu 1/32.' },
+          { q: 'The chance of a game malfunctioning is 1 out of 20. What is the best decision based on probability?', opts: ['Do nothing because 1/20 is 0', 'Prepare backup equipment just in case', 'Stop the festival', 'Remove all games'], ans: 1, exp: 'Walaupun peluangnya kecil (1/20 = 5%), risiko tetap ada sehingga menyiapkan cadangan adalah langkah bijak.' },
+          { q: 'Why does understanding probability help us in real-life decisions?', opts: ['It guarantees we always win games', 'It helps predict risks and choose fairly', 'It removes all uncertainty completely', 'It only works for dice and cards'], ans: 1, exp: 'Peluang membantu kita memperkirakan risiko, bersiap menghadapi kemungkinan, dan mengambil keputusan secara adil dan logis.' }
+        ]
+      }
+    ];
+
+    // ==================== STATE ====================
+    const TEAM_COLORS = [
+      { bg: 'bg-rose-500', hover: 'hover:bg-rose-600', ring: 'ring-rose-300', light: 'bg-rose-50 text-rose-800 border-rose-200' },
+      { bg: 'bg-blue-500', hover: 'hover:bg-blue-600', ring: 'ring-blue-300', light: 'bg-blue-50 text-blue-800 border-blue-200' },
+      { bg: 'bg-emerald-500', hover: 'hover:bg-emerald-600', ring: 'ring-emerald-300', light: 'bg-emerald-50 text-emerald-800 border-emerald-200' },
+      { bg: 'bg-amber-500', hover: 'hover:bg-amber-600', ring: 'ring-amber-300', light: 'bg-amber-50 text-amber-800 border-amber-200' },
+      { bg: 'bg-purple-500', hover: 'hover:bg-purple-600', ring: 'ring-purple-300', light: 'bg-purple-50 text-purple-800 border-purple-200' }
+    ];
+
+    const state = {
+      activeTab: 'materi',
+      activeChapterId: 'bab-a',
+      soundEnabled: true,
+      selectedFormativeId: 'f1',
+      quizMode: 'individu', // 'individu' | 'tim'
+      teamNames: ['Tim 1', 'Tim 2', 'Tim 3', 'Tim 4', 'Tim 5'],
+      // Active quiz state
+      qIndex: 0,
+      answered: false,
+      individuScore: 0,
+      individuCorrect: 0,
+      individuWrong: 0,
+      teamScores: [0, 0, 0, 0, 0],
+      activeTeamIndex: null // 0..4 when a team buzzes in
+    };
+
+    // ==================== WEB AUDIO API (Suara Tepuk Tangan, Buzzer, & Salah) ====================
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    function playApplauseSound() {
+      if (!state.soundEnabled) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      // Layered short filtered noise bursts to simulate realistic clapping applause
+      const clapCount = 22;
+      for (let i = 0; i < clapCount; i++) {
+        const start = now + i * 0.065 + Math.random() * 0.03;
+        const duration = 0.09 + Math.random() * 0.05;
+        const bufferSize = Math.floor(ctx.sampleRate * duration);
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let j = 0; j < bufferSize; j++) {
+          const env = Math.exp(-j / (ctx.sampleRate * 0.025));
+          data[j] = (Math.random() * 2 - 1) * env;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 950 + Math.random() * 900;
+        filter.Q.value = 1.2;
+
+        const gain = ctx.createGain();
+        const peak = 0.28 * (1 - i / (clapCount * 1.4));
+        gain.gain.setValueAtTime(peak, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start(start);
+        noise.stop(start + duration);
+      }
+    }
+
+    function playBuzzerSound() {
+      if (!state.soundEnabled) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(660, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+      gain.gain.setValueAtTime(0.22, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.23);
+    }
+
+    function playSadSound() {
+      if (!state.soundEnabled) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(330, now);
+      osc.frequency.linearRampToValueAtTime(220, now + 0.35);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    }
+
+    // ==================== CONFETTI ENGINE ====================
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const cCtx = confettiCanvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiRaf = null;
+
+    function resizeConfetti() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfetti);
+    resizeConfetti();
+
+    function launchConfetti() {
+      if (confettiRaf) {
+        cancelAnimationFrame(confettiRaf);
+        confettiRaf = null;
+      }
+      const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#ef4444'];
+      confettiParticles = Array.from({ length: 120 }, () => ({
+        x: Math.random() * confettiCanvas.width,
+        y: -20 - Math.random() * 140,
+        w: 7 + Math.random() * 6,
+        h: 5 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 6,
+        vy: 3 + Math.random() * 5,
+        rot: Math.random() * Math.PI * 2,
+        vRot: (Math.random() - 0.5) * 0.2,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      }));
+
+      function frame() {
+        cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        confettiParticles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.08;
+          p.rot += p.vRot;
+          cCtx.save();
+          cCtx.translate(p.x, p.y);
+          cCtx.rotate(p.rot);
+          cCtx.fillStyle = p.color;
+          cCtx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          cCtx.restore();
+        });
+        confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 30);
+        if (confettiParticles.length > 0) {
+          confettiRaf = requestAnimationFrame(frame);
+        } else {
+          cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+          confettiRaf = null;
+        }
+      }
+      confettiRaf = requestAnimationFrame(frame);
+    }
+
+    // ==================== DOM HELPERS ====================
+    const el = id => document.getElementById(id);
+
+    function switchMainTab(tab) {
+      state.activeTab = tab;
+      if (tab === 'materi') {
+        el('view-materi').classList.remove('hidden');
+        el('view-latihan').classList.add('hidden');
+        el('nav-materi').className = 'px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition bg-white text-indigo-700 shadow-sm';
+        el('nav-latihan').className = 'px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900';
+      } else {
+        el('view-materi').classList.add('hidden');
+        el('view-latihan').classList.remove('hidden');
+        el('nav-latihan').className = 'px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition bg-white text-indigo-700 shadow-sm';
+        el('nav-materi').className = 'px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition text-slate-600 hover:text-slate-900';
+      }
+    }
+
+    // ==================== RENDER MATERI ====================
+    function renderChapters() {
+      const tabsEl = el('chapter-tabs');
+      tabsEl.innerHTML = CHAPTERS.map(ch => {
+        const active = ch.id === state.activeChapterId;
+        return `
+          <button type="button" data-chapter="${ch.id}"
+            class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold transition ${
+              active
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+            }">
+            ${ch.title}
+          </button>
+        `;
+      }).join('');
+
+      const current = CHAPTERS.find(c => c.id === state.activeChapterId) || CHAPTERS[0];
+      el('chapter-content').innerHTML = current.html;
+    }
+
+    el('chapter-tabs').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-chapter]');
+      if (!btn) return;
+      state.activeChapterId = btn.dataset.chapter;
+      renderChapters();
+    });
+
+    // ==================== RENDER QUIZ SETUP ====================
+    function renderFormativeCards() {
+      el('formative-selector').innerHTML = FORMATIVES.map(f => {
+        const selected = f.id === state.selectedFormativeId;
+        return `
+          <button type="button" data-formative="${f.id}"
+            class="text-left p-4 rounded-2xl border-2 transition ${
+              selected
+                ? 'border-indigo-600 bg-indigo-50/70 shadow-sm'
+                : 'border-slate-200 bg-white hover:border-slate-300'
+            }">
+            <div class="font-bold text-slate-900 text-sm">${f.title}</div>
+            <div class="text-xs text-slate-500 mt-1">${f.subtitle}</div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderTeamInputs() {
+      el('team-name-inputs').innerHTML = state.teamNames.map((name, idx) => `
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Tim ${idx + 1}</label>
+          <input type="text" data-team-input="${idx}" value="${name}" maxlength="18"
+            class="w-full px-3 py-2 rounded-xl border border-amber-300 bg-white text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+      `).join('');
+    }
+
+    function setQuizMode(mode) {
+      state.quizMode = mode;
+      if (mode === 'individu') {
+        el('mode-btn-individu').className = 'text-left p-4 rounded-2xl border-2 border-indigo-600 bg-indigo-50/70 transition flex items-start gap-3.5';
+        el('mode-btn-tim').className = 'text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-slate-300 transition flex items-start gap-3.5';
+        el('team-config-panel').classList.add('hidden');
+      } else {
+        el('mode-btn-tim').className = 'text-left p-4 rounded-2xl border-2 border-amber-500 bg-amber-50/70 transition flex items-start gap-3.5';
+        el('mode-btn-individu').className = 'text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-slate-300 transition flex items-start gap-3.5';
+        el('team-config-panel').classList.remove('hidden');
+        renderTeamInputs();
+      }
+    }
+
+    el('formative-selector').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-formative]');
+      if (!btn) return;
+      state.selectedFormativeId = btn.dataset.formative;
+      renderFormativeCards();
+    });
+
+    el('mode-btn-individu').addEventListener('click', () => setQuizMode('individu'));
+    el('mode-btn-tim').addEventListener('click', () => setQuizMode('tim'));
+
+    el('team-name-inputs').addEventListener('input', e => {
+      const idx = e.target.dataset.teamInput;
+      if (idx !== undefined) {
+        state.teamNames[Number(idx)] = e.target.value.trim() || `Tim ${Number(idx) + 1}`;
+      }
+    });
+
+    // ==================== QUIZ ENGINE ====================
+    function getCurrentFormative() {
+      return FORMATIVES.find(f => f.id === state.selectedFormativeId) || FORMATIVES[0];
+    }
+
+    function startQuiz() {
+      getAudioCtx();
+      state.qIndex = 0;
+      state.answered = false;
+      state.individuScore = 0;
+      state.individuCorrect = 0;
+      state.individuWrong = 0;
+      state.teamScores = [0, 0, 0, 0, 0];
+      state.activeTeamIndex = null;
+
+      el('quiz-setup').classList.add('hidden');
+      el('quiz-result').classList.add('hidden');
+      el('quiz-active').classList.remove('hidden');
+
+      if (state.quizMode === 'individu') {
+        el('individu-live-score').classList.remove('hidden');
+        el('team-buzzer-panel').classList.add('hidden');
+      } else {
+        el('individu-live-score').classList.add('hidden');
+        el('team-buzzer-panel').classList.remove('hidden');
+      }
+
+      renderQuestion();
+    }
+
+    function renderTeamBuzzers() {
+      const statusEl = el('buzzer-status-text');
+      if (state.activeTeamIndex === null) {
+        statusEl.textContent = 'Menunggu tim menekan tombol rebutan...';
+        statusEl.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800';
+      } else {
+        const teamName = state.teamNames[state.activeTeamIndex];
+        statusEl.textContent = `🔔 ${teamName} berhak mengklik jawaban!`;
+        statusEl.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800';
+      }
+
+      el('team-buzzer-grid').innerHTML = state.teamNames.map((name, idx) => {
+        const c = TEAM_COLORS[idx];
+        const isSelected = state.activeTeamIndex === idx;
+        const isLockedOut = state.answered || (state.activeTeamIndex !== null && !isSelected);
+        return `
+          <button type="button" data-buzzer="${idx}" ${isLockedOut ? 'disabled' : ''}
+            class="buzzer-btn p-3 rounded-2xl text-white font-bold text-left shadow-sm flex flex-col justify-between gap-1.5 transition ${
+              c.bg
+            } ${!isLockedOut ? c.hover : ''} ${
+              isSelected ? 'ring-4 ' + c.ring + ' scale-[1.02]' : ''
+            } ${isLockedOut && !isSelected ? 'opacity-45 cursor-not-allowed' : ''}">
+            <div class="flex items-center justify-between w-full">
+              <span class="text-xs bg-black/20 px-2 py-0.5 rounded-full">[${idx + 1}]</span>
+              <span class="text-sm font-extrabold">${state.teamScores[idx]} pts</span>
+            </div>
+            <div class="text-sm truncate w-full">🔔 ${name}</div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderQuestion() {
+      const fmt = getCurrentFormative();
+      const q = fmt.questions[state.qIndex];
+      const total = fmt.questions.length;
+
+      state.answered = false;
+      state.activeTeamIndex = null;
+
+      el('quiz-badge').textContent = fmt.title;
+      el('quiz-progress-text').textContent = `Soal ${state.qIndex + 1} dari ${total}`;
+      el('quiz-progress-bar').style.width = `${((state.qIndex + 1) / total) * 100}%`;
+      el('individu-score-val').textContent = state.individuScore;
+      el('question-text').textContent = `${state.qIndex + 1}. ${q.q}`;
+      el('feedback-box').classList.add('hidden');
+
+      if (state.quizMode === 'tim') {
+        renderTeamBuzzers();
+        el('team-lock-notice').classList.remove('hidden');
+      } else {
+        el('team-lock-notice').classList.add('hidden');
+      }
+
+      renderOptions();
+    }
+
+    function renderOptions(selectedIdx = null) {
+      const fmt = getCurrentFormative();
+      const q = fmt.questions[state.qIndex];
+      const labels = ['A', 'B', 'C', 'D'];
+      const lockedByBuzzer = state.quizMode === 'tim' && state.activeTeamIndex === null;
+      const disabled = state.answered || lockedByBuzzer;
+
+      el('options-grid').innerHTML = q.opts.map((opt, idx) => {
+        let cls = 'border-slate-200 bg-white hover:border-indigo-400 hover:bg-indigo-50/40 text-slate-800';
+        if (lockedByBuzzer) {
+          cls = 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed';
+        } else if (state.answered) {
+          if (idx === q.ans) {
+            cls = 'border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200';
+          } else if (idx === selectedIdx && idx !== q.ans) {
+            cls = 'border-rose-500 bg-rose-50 text-rose-900 ring-2 ring-rose-200';
+          } else {
+            cls = 'border-slate-200 bg-slate-50 text-slate-400';
+          }
+        }
+
+        return `
+          <button type="button" data-opt="${idx}" ${disabled ? 'disabled' : ''}
+            class="text-left p-4 rounded-2xl border-2 font-semibold text-sm sm:text-base transition flex items-center gap-3 ${cls}">
+            <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-extrabold text-sm flex items-center justify-center shrink-0">
+              ${labels[idx]}
+            </span>
+            <span>${opt}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectBuzzer(teamIdx) {
+      if (state.quizMode !== 'tim' || state.answered || state.activeTeamIndex !== null) return;
+      playBuzzerSound();
+      state.activeTeamIndex = teamIdx;
+      el('team-lock-notice').classList.add('hidden');
+      renderTeamBuzzers();
+      renderOptions();
+    }
+
+    function handleAnswer(optIdx) {
+      if (state.answered) return;
+      if (state.quizMode === 'tim' && state.activeTeamIndex === null) return;
+
+      const fmt = getCurrentFormative();
+      const q = fmt.questions[state.qIndex];
+      const isCorrect = optIdx === q.ans;
+      state.answered = true;
+
+      if (state.quizMode === 'individu') {
+        if (isCorrect) {
+          state.individuCorrect += 1;
+          state.individuScore += 10;
+        } else {
+          state.individuWrong += 1;
+        }
+        el('individu-score-val').textContent = state.individuScore;
+      } else {
+        if (isCorrect) {
+          state.teamScores[state.activeTeamIndex] += 10;
+        }
+        renderTeamBuzzers();
+      }
+
+      renderOptions(optIdx);
+
+      const fbBox = el('feedback-box');
+      const fbEmoji = el('feedback-emoji');
+      const fbTitle = el('feedback-title');
+      const fbDesc = el('feedback-desc');
+      const fbScore = el('feedback-score-info');
+
+      fbBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'bg-rose-50', 'border-rose-200');
+      fbEmoji.classList.remove('animate-pop', 'animate-sad');
+      void fbEmoji.offsetWidth; // trigger reflow
+
+      if (isCorrect) {
+        fbBox.classList.add('bg-emerald-50', 'border-emerald-200');
+        fbEmoji.textContent = '🎉';
+        fbEmoji.classList.add('animate-pop');
+        fbTitle.textContent = state.quizMode === 'tim'
+          ? `Benar! (+10 poin untuk ${state.teamNames[state.activeTeamIndex]})`
+          : 'Benar! Hebat!';
+        fbTitle.className = 'text-lg font-extrabold text-emerald-900';
+        fbDesc.textContent = q.exp;
+        fbDesc.className = 'text-sm mt-0.5 leading-relaxed text-emerald-800';
+        launchConfetti();
+        playApplauseSound();
+      } else {
+        fbBox.classList.add('bg-rose-50', 'border-rose-200');
+        fbEmoji.textContent = '😢';
+        fbEmoji.classList.add('animate-sad');
+        const correctLabel = ['A', 'B', 'C', 'D'][q.ans];
+        fbTitle.textContent = state.quizMode === 'tim'
+          ? `Kurang Tepat (${state.teamNames[state.activeTeamIndex]})`
+          : 'Yah, Kurang Tepat!';
+        fbTitle.className = 'text-lg font-extrabold text-rose-900';
+        fbDesc.textContent = `Jawaban yang benar: ${correctLabel}. ${q.opts[q.ans]} — ${q.exp}`;
+        fbDesc.className = 'text-sm mt-0.5 leading-relaxed text-rose-800';
+        playSadSound();
+      }
+
+      if (state.quizMode === 'individu') {
+        fbScore.textContent = `Skor saat ini: ${state.individuScore} / ${fmt.questions.length * 10} (Benar: ${state.individuCorrect}, Salah: ${state.individuWrong})`;
+      } else {
+        const tIdx = state.activeTeamIndex;
+        fbScore.textContent = `Skor ${state.teamNames[tIdx]}: ${state.teamScores[tIdx]} poin`;
+      }
+
+      el('next-question-btn').textContent =
+        state.qIndex + 1 < fmt.questions.length ? 'Soal Berikutnya →' : 'Lihat Skor Akhir 🏆';
+    }
+
+    function showFinalResult() {
+      el('quiz-active').classList.add('hidden');
+      el('quiz-result').classList.remove('hidden');
+
+      const fmt = getCurrentFormative();
+
+      if (state.quizMode === 'individu') {
+        el('result-individu-box').classList.remove('hidden');
+        el('result-tim-box').classList.add('hidden');
+        el('result-subtitle').textContent = `Kamu telah menyelesaikan ${fmt.title}`;
+        el('final-individu-score').textContent = state.individuScore;
+        el('final-individu-correct').textContent = state.individuCorrect;
+        el('final-individu-wrong').textContent = state.individuWrong;
+        if (state.individuScore >= 70) {
+          launchConfetti();
+          playApplauseSound();
+        }
+      } else {
+        el('result-individu-box').classList.add('hidden');
+        el('result-tim-box').classList.remove('hidden');
+        el('result-subtitle').textContent = `Rekap skor akhir tiap tim pada ${fmt.title}`;
+
+        const ranked = state.teamNames
+          .map((name, idx) => ({ name, score: state.teamScores[idx], idx }))
+          .sort((a, b) => b.score - a.score);
+
+        const topScore = ranked[0].score;
+        el('final-team-list').innerHTML = ranked.map((t, rank) => {
+          const isWinner = t.score === topScore && topScore > 0;
+          const c = TEAM_COLORS[t.idx];
+          return `
+            <div class="flex items-center justify-between p-4 rounded-2xl border ${
+              isWinner ? 'bg-amber-50 border-amber-300 shadow-sm' : 'bg-slate-50 border-slate-200'
+            }">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl flex items-center justify-center font-extrabold text-sm text-white ${c.bg}">
+                  #${rank + 1}
+                </span>
+                <div>
+                  <div class="font-extrabold text-slate-900 flex items-center gap-1.5">
+                    ${t.name}
+                    ${isWinner ? '<span>👑</span>' : ''}
+                  </div>
+                </div>
+              </div>
+              <div class="text-lg font-extrabold text-slate-900">${t.score} <span class="text-xs font-semibold text-slate-500">poin</span></div>
+            </div>
+          `;
+        }).join('');
+
+        launchConfetti();
+        playApplauseSound();
+      }
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    el('nav-materi').addEventListener('click', () => switchMainTab('materi'));
+    el('nav-latihan').addEventListener('click', () => switchMainTab('latihan'));
+    el('cta-to-quiz').addEventListener('click', () => switchMainTab('latihan'));
+
+    el('sound-toggle').addEventListener('click', () => {
+      state.soundEnabled = !state.soundEnabled;
+      el('sound-icon').textContent = state.soundEnabled ? '🔊' : '🔇';
+      el('sound-label').textContent = state.soundEnabled ? 'Suara On' : 'Suara Off';
+    });
+
+    el('start-quiz-btn').addEventListener('click', startQuiz);
+
+    el('quit-quiz-btn').addEventListener('click', () => {
+      el('quiz-active').classList.add('hidden');
+      el('quiz-setup').classList.remove('hidden');
+    });
+
+    el('team-buzzer-grid').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-buzzer]');
+      if (!btn || btn.disabled) return;
+      selectBuzzer(Number(btn.dataset.buzzer));
+    });
+
+    el('options-grid').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-opt]');
+      if (!btn || btn.disabled) return;
+      handleAnswer(Number(btn.dataset.opt));
+    });
+
+    el('next-question-btn').addEventListener('click', () => {
+      const fmt = getCurrentFormative();
+      if (state.qIndex + 1 < fmt.questions.length) {
+        state.qIndex += 1;
+        renderQuestion();
+      } else {
+        showFinalResult();
+      }
+    });
+
+    el('retry-quiz-btn').addEventListener('click', startQuiz);
+    el('back-to-setup-btn').addEventListener('click', () => {
+      el('quiz-result').classList.add('hidden');
+      el('quiz-setup').classList.remove('hidden');
+    });
+
+    // Keyboard shortcuts 1-5 for Team Buzzer mode
+    window.addEventListener('keydown', e => {
+      if (state.activeTab !== 'latihan' || state.quizMode !== 'tim') return;
+      if (el('quiz-active').classList.contains('hidden')) return;
+      if (['1', '2', '3', '4', '5'].includes(e.key)) {
+        selectBuzzer(Number(e.key) - 1);
+      }
+    });
+
+    // Initial render
+    renderChapters();
+    renderFormativeCards();
+    setQuizMode('individu');
+  </script>
+</body>
+</html>
